@@ -53,9 +53,9 @@ for moeda, quantidade in informacoes_usuario.items():
     except Exception as e:
         print(f'1-espaço input não achado Erro: {str(e)}')
         break
-    
+        
     time.sleep(13)
-    buscaResult = "//html/body/div[1]/div[2]/div[1]/div[1]/div[2]/div[1]/div/div[3]/div/div[2]/div[4]/div/div/div/div/div[2]/div[2]/div[1]/a[1]/div"
+    buscaResult = "//html/body/div[1]/div[2]/div/div[1]/div/div[1]/div/div[3]/div/div[2]/div[4]/div/div/div/div/div[2]/div[2]/div[1]/a[1]/div"
     pesquisa2 = WebDriverWait(driver, 45).until(
     EC.visibility_of_element_located((By.XPATH, buscaResult))
     )
@@ -72,17 +72,28 @@ for moeda, quantidade in informacoes_usuario.items():
         print('preço não achado')
 
     primeiraQuantidade = quantidade   
-    valor = preco2.replace('$', '')
+    if ',' in preco2:
+        valor = preco2.replace('$', '').replace(',', '')
+        parte_inteira, parte_decimal = valor.rsplit('.', 1)
+        valor = parte_inteira + '.' + parte_decimal
+    else:    
+        valor = preco2.replace('$', '')
+    
     valorDolar = float(valor)
     montante = primeiraQuantidade * valorDolar
     print(f'Seu montante para {moeda} é de ${montante}')
     quantidade = primeiraQuantidade
     total_em_dólar = round(montante, 2)
     total_em_real = montante * taxa_dolar_real
+    
     linha_atual = [moeda, quantidade, valorDolar, total_em_dólar, total_em_real]
     tabela.append(linha_atual)
 
 tabela2 = tabulate(tabela,headers=cabecalho,tablefmt="grid")
-print(tabela2)
+total_em_real_sum = 0
+for linha_atual in tabela:
+    total_em_real = linha_atual[4]
+    total_em_real_sum += total_em_real
 
-#loading...
+print(tabela2)
+print(f"O valor total da sua carteira é: R${total_em_real_sum}")
