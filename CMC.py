@@ -32,6 +32,7 @@ time.sleep(8)
 
 cabecalho = ["Nome da Moeda", "Quantidade", "Preço em Dólar", "total em dolar", "total em real"]
 tabela = []
+#tabela_atualizada = []
 
 for moeda, quantidade in informacoes_usuario.items():
     
@@ -88,12 +89,16 @@ for moeda, quantidade in informacoes_usuario.items():
     
     linha_atual = [moeda, quantidade, valorDolar, total_em_dólar, total_em_real]
     tabela.append(linha_atual)
-
+    
 tabela2 = tabulate(tabela,headers=cabecalho,tablefmt="grid")
 total_em_real_sum = 0
+total_em_real_sum = sum(linha_atual[4] for linha_atual in tabela)
+
 for linha_atual in tabela:
     total_em_real = linha_atual[4]
-    total_em_real_sum += total_em_real
-
+    porcentagem_ativo = (total_em_real / total_em_real_sum) * 100
+    linha_atual.append(porcentagem_ativo)
+    
+tabela2 = tabulate(tabela, headers=cabecalho + ['Porcentagem'], tablefmt="grid")
 print(tabela2)
 print(f"O valor total da sua carteira é: R${total_em_real_sum}")
