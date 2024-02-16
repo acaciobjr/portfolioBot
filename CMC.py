@@ -5,9 +5,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import StaleElementReferenceException
 from forex_python.converter import CurrencyRates
 from tabulate import tabulate
-#from selenium.common.exceptions import NoSuchElementException
-#from selenium.common.exceptions import TimeoutException
 import time
+import os
+from datetime import datetime
 
 informacoes_usuario = {}
 continuar = True
@@ -102,3 +102,14 @@ for linha_atual in tabela:
 tabela2 = tabulate(tabela, headers=cabecalho + ['Porcentagem'], tablefmt="grid")
 print(tabela2)
 print(f"O valor total da sua carteira é: R${total_em_real_sum}")
+
+data_atual = datetime.now().strftime("%Y-%m-%d")
+caminho = fr"endereço do diretório\portfolio_{data_atual}.txt"
+
+with open(caminho, 'w') as arquivo:
+    arquivo.write(tabela2 + "\n" + f"O valor total da sua carteira é: R${total_em_real_sum}")
+
+if os.path.exists(caminho):
+    print(f"O arquivo Notepad foi criado com sucesso em: {caminho}")
+else:
+    print("Erro ao criar o arquivo Notepad.")
