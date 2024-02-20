@@ -105,11 +105,14 @@ print(f"O valor total da sua carteira é: R${total_em_real_sum}")
 
 data_atual = datetime.now().strftime("%Y-%m-%d")
 caminho = fr"endereço do diretório\portfolio_{data_atual}.txt"
+extensao = '.txt'
+contador = 1
 
-with open(caminho, 'w') as arquivo:
+while True:  
+    Arq = f"{caminho}_{contador}{extensao}"
+    if not os.path.exists(Arq):
+        break
+    contador += 1
+with open(Arq, 'w') as arquivo:
     arquivo.write(tabela2 + "\n" + f"O valor total da sua carteira é: R${total_em_real_sum}")
-
-if os.path.exists(caminho):
-    print(f"O arquivo Notepad foi criado com sucesso em: {caminho}")
-else:
-    print("Erro ao criar o arquivo Notepad.")
+    print(f"O arquivo Notepad foi criado com sucesso em: {Arq}")
