@@ -22,17 +22,33 @@ while continuar:
 print("O portfolio é:")
 print(informacoes_usuario)
 
-c = CurrencyRates()
-taxa_dolar_real = c.get_rate('USD', 'BRL')
+driver = webdriver.Chrome()
+try:
+    driver.get("https://www.google.com/search?q=dolar")
+except:
+    print('página do dolar nao abriu')
+
+try:
+    xpathD = "//*[@id='knowledge-currency__updatable-data-column']/div[1]/div[2]/span[1]"
+    imgPreco2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpathD)))
+    preco = imgPreco2.text
+    preco2 = preco.replace(',', '.')
+    print(preco2)
+    taxa_dolar_real = float(preco2)
+    print(f'O preço do dólar é {taxa_dolar_real}')
+except Exception as e:
+    print(f'Erro ao obter o preço do dólar: {e}')
+driver.quit()
 
 driver = webdriver.Chrome()
-driver.get("https://coinmarketcap.com/")
-driver.maximize_window()
+try:
+    driver.get("https://coinmarketcap.com/")
+    driver.maximize_window()
+except:
+    print('nao abriu')
 time.sleep(8)
 
-cabecalho = ["Nome da Moeda", "Quantidade", "Preço em Dólar", "total em dolar", "total em real"]
 tabela = []
-#tabela_atualizada = []
 
 for moeda, quantidade in informacoes_usuario.items():
     
@@ -89,7 +105,8 @@ for moeda, quantidade in informacoes_usuario.items():
     
     linha_atual = [moeda, quantidade, valorDolar, total_em_dólar, total_em_real]
     tabela.append(linha_atual)
-    
+
+cabecalho = ["Nome da Moeda", "Quantidade", "Preço em Dólar", "total em dolar", "total em real"]    
 tabela2 = tabulate(tabela,headers=cabecalho,tablefmt="grid")
 total_em_real_sum = 0
 total_em_real_sum = sum(linha_atual[4] for linha_atual in tabela)
@@ -104,7 +121,7 @@ print(tabela2)
 print(f"O valor total da sua carteira é: R${total_em_real_sum}")
 
 data_atual = datetime.now().strftime("%Y-%m-%d")
-caminho = fr"endereço do diretório\portfolio_{data_atual}.txt"
+caminho = fr"C:\Users\Rose\Documents\portfolio_{data_atual}"
 extensao = '.txt'
 contador = 1
 
