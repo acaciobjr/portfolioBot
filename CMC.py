@@ -8,15 +8,32 @@ import time
 import os
 from datetime import datetime
 
+file_path = input('digite o caminho completo para o notepad: ')
+
 informacoes_usuario = {}
-continuar = True
-while continuar:
-    moeda = input("Digite o nome da moeda (ou 'sair' para encerrar): ")    
-    if moeda.lower() == 'sair':
-        continuar = False
-        break
-    quantidade = float(input(f"Digite a quantidade de {moeda} que você possui: "))    
-    informacoes_usuario[moeda] = quantidade
+
+PATH = file_path
+if os.path.isfile(PATH) and os.access(PATH, os.R_OK):
+    print("arquivo existe e é legível")
+else:
+    print("arquivo não existe ou está ilegível")
+
+try:
+    with open(file_path, 'r') as file:
+        for line in file:
+            line = line.strip()
+            if ':' in line:
+                key, value = line.split(':',1)
+                key = key.strip()
+                value = value.strip()
+                try:
+                    value = float(value)
+                except ValueError:
+                    print(f"Valor não pode ser convertido para float: {value}")
+                    continue
+                informacoes_usuario[key] = value
+except Exception as e:
+    print(f'Erro ao achar o diretorio: {e}') 
 
 print("O portfolio é:")
 print(informacoes_usuario)
