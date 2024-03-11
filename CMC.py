@@ -137,7 +137,7 @@ print(tabela2)
 print(f"O valor total da sua carteira é: R${total_em_real_sum}")
 
 data_atual = datetime.now().strftime("%Y-%m-%d")
-caminho = fr"C:\Users\Rose\Documents\portfolio_{data_atual}"
+caminho = fr"diretório de destino do documento de texto_{data_atual}"
 extensao = '.txt'
 contador = 1
 
