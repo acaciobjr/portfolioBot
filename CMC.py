@@ -130,17 +130,18 @@ for moeda, quantidade in informacoes_usuario.items():
     quantidade = primeiraQuantidade
     total_em_dólar = round(montante, 2)
     total_em_real = montante * taxa_dolar_real
+    precoReal = valorDolar * taxa_dolar_real
     
-    linha_atual = [moeda, quantidade, valorDolar, total_em_dólar, total_em_real]
+    linha_atual = [moeda, quantidade, valorDolar, precoReal, total_em_dólar, total_em_real]
     tabela.append(linha_atual)
 
-cabecalho = ["Nome da Moeda", "Quantidade", "Preço em Dólar", "total em dolar", "total em real"]    
+cabecalho = ["Nome da Moeda", "Quantidade", "Preço em Dólar", "Preço em Real", "total em dolar", "total em real"]    
 tabela2 = tabulate(tabela,headers=cabecalho,tablefmt="grid")
 total_em_real_sum = 0
-total_em_real_sum = sum(linha_atual[4] for linha_atual in tabela)
+total_em_real_sum = sum(linha_atual[5] for linha_atual in tabela)
 
 for linha_atual in tabela:
-    total_em_real = linha_atual[4]
+    total_em_real = linha_atual[5]
     porcentagem_ativo = (total_em_real / total_em_real_sum) * 100
     linha_atual.append(porcentagem_ativo)
     
