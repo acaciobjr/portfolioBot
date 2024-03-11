@@ -87,14 +87,26 @@ for moeda, quantidade in informacoes_usuario.items():
         print(f'1-espaço input não achado Erro: {str(e)}')
         break
         
-    time.sleep(13)
-    buscaResult = "//html/body/div[1]/div[2]/div/div[1]/div/div[1]/div/div[3]/div/div[2]/div[4]/div/div/div/div/div[2]/div[2]/div[1]/a[1]/div"
-    pesquisa2 = WebDriverWait(driver, 45).until(
-    EC.visibility_of_element_located((By.XPATH, buscaResult))
-    )
-    print('tentando clicar moeda buscada')
-    pesquisa2.click()
-    time.sleep(8)
+    while True:
+        try:  
+            time.sleep(6)
+            asset = "//div[@class='sc-f70bb44c-0 sc-230facf7-2 xRfEp' and contains(text(), 'Cryptoassets')]"          
+            pesquisa3 = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, asset))
+            )
+            visible = pesquisa3.text
+            print('o nome achado em cima da busca foi: ',visible)
+            if visible == 'Cryptoassets':
+                buscaResult = "//html/body/div[1]/div[2]/div/div[1]/div/div[1]/div/div[3]/div/div[2]/div[4]/div/div/div/div/div[2]/div[2]/div[1]/a[1]/div"
+                pesquisa2 = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located((By.XPATH, buscaResult))
+                )
+                pesquisa2.click()
+                break
+        except (NoSuchElementException, TimeoutException) as e:
+            print("Elemento não encontrado. Tentando novamente em 2 segundos...")
+            time.sleep(2)    
+    time.sleep(10)
     try:
         print('buscando preço')
         imgPreco = "//*[@id='section-coin-overview']/div[2]/span"
