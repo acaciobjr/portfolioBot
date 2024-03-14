@@ -108,7 +108,7 @@ for moeda, quantidade in informacoes_usuario.items():
         except (NoSuchElementException, TimeoutException) as e:
             print("Elemento não encontrado. Tentando novamente em 2 segundos...")
             time.sleep(2)    
-    time.sleep(10)
+    time.sleep(5)
     try:
         print('buscando preço')
         imgPreco = "//*[@id='section-coin-overview']/div[2]/span"
