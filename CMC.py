@@ -62,57 +62,61 @@ driver = webdriver.Chrome()
 try:
     driver.get("https://coinmarketcap.com/")
     driver.maximize_window()
+    time.sleep(8)
 except:
     print('nao abriu')
-time.sleep(8)
 
 tabela = []
-
 for moeda, quantidade in informacoes_usuario.items():
     
-    xpathBusca = '//html/body/div[1]/div[2]/div/div[1]/div/div[1]/div/div[3]/div/div[2]/div[3]/div/div[1]'
-    xpathinput = "//html/body/div[1]/div[2]/div/div[1]/div/div[1]/div/div[3]/div/div[2]/div[4]/div/div/div/div/div[1]/div[1]/div[1]/input"
-    try:            
-        pesquisa = WebDriverWait(driver, 15).until(
-        EC.visibility_of_element_located((By.XPATH, xpathBusca)))
-        pesquisa.click()
-        print('abrindo pesquisa')
-        time.sleep(4) 
-        print('procurando input pesquisa')
-        pesquisai = WebDriverWait(driver, 30).until(
-        EC.visibility_of_element_located((By.XPATH, xpathinput)))
-        pesquisai.click()        
-        time.sleep(5)
-        print(f'tentando enviar pesquisa: {moeda}')
-        pesquisai.send_keys(moeda)
-    except Exception as e:
-        print(f'1-espaço input não achado Erro: {str(e)}')
-        break
-        
+    while True:
+        try:     
+            xpathBusca = "//div[contains(text(), 'Search')]"       
+            pesquisa = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, xpathBusca)))
+            pesquisa.click()
+            print('abrindo pesquisa')
+            time.sleep(4) 
+            print('procurando input pesquisa')
+            xpathinput = "//input[@class='sc-d565189d-3 kKevNe desktop-input']"
+            pesquisai = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, xpathinput)))
+            pesquisai.click()        
+            
+            print(f'tentando enviar pesquisa: {moeda}')
+            pesquisai.send_keys(moeda)
+            time.sleep(5)
+            break
+        except Exception as e:
+            print(f'1-espaço input não achado Erro: {str(e)}')       
+    
     while True:
         try:  
-            time.sleep(6)
-            asset = "//div[@class='sc-f70bb44c-0 sc-230facf7-2 xRfEp' and contains(text(), 'Cryptoassets')]"          
+            time.sleep(6)    
+            asset = "//div[@class='sc-f70bb44c-0 sc-230facf7-2 xRfEp' and contains(text(), 'Cryptoassets')]"
             pesquisa3 = WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located((By.XPATH, asset))
             )
             visible = pesquisa3.text
-            print('o nome achado em cima da busca foi: ',visible)
+            print('o nome achado em cima da busca foi:',visible)
             if visible == 'Cryptoassets':
-                buscaResult = "//html/body/div[1]/div[2]/div/div[1]/div/div[1]/div/div[3]/div/div[2]/div[4]/div/div/div/div/div[2]/div[2]/div[1]/a[1]/div"
+                print('validação de categoria, ok')
+                buscaResult = '//div[@class="sc-42dd6c6d-0 VWkPh focused"]'
                 pesquisa2 = WebDriverWait(driver, 10).until(
                 EC.visibility_of_element_located((By.XPATH, buscaResult))
                 )
+                print('clicando')
                 pesquisa2.click()
+                time.sleep(5)
                 break
         except (NoSuchElementException, TimeoutException) as e:
             print("Elemento não encontrado. Tentando novamente em 2 segundos...")
             time.sleep(2)    
-    time.sleep(5)
+    
     try:
         print('buscando preço')
         imgPreco = "//*[@id='section-coin-overview']/div[2]/span"
-        imgPreco2 = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, imgPreco)))
+        imgPreco2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, imgPreco)))
         preco2 = imgPreco2.text
         print(f'preço de {moeda} é {preco2}')
     except StaleElementReferenceException:
