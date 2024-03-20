@@ -10,6 +10,27 @@ import time
 import os
 from datetime import datetime
 
+def busca(nome):
+    while True:
+        try:     
+            xpathBusca = "//div[contains(text(), 'Search')]"       
+            pesquisa = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, xpathBusca)))
+            pesquisa.click()
+            print('abrindo pesquisa')
+            time.sleep(4) 
+            print('procurando input pesquisa')
+            xpathinput = "//input[@class='sc-d565189d-3 kKevNe desktop-input']"
+            pesquisai = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, xpathinput)))
+            if pesquisai is not None:
+                pesquisai.click()       
+                print(f'tentando enviar pesquisa: {nome}')
+                pesquisai.send_keys(nome)
+                break
+        except Exception as e:
+            print(f'1-espaço input não achado Erro: {str(e)}')
+    
 file_path = input('digite o caminho completo para o notepad: ')
 
 informacoes_usuario = {}
@@ -67,32 +88,12 @@ except:
     print('nao abriu')
 
 tabela = []
-for moeda, quantidade in informacoes_usuario.items():
-    
-    while True:
-        try:     
-            xpathBusca = "//div[contains(text(), 'Search')]"       
-            pesquisa = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, xpathBusca)))
-            pesquisa.click()
-            print('abrindo pesquisa')
-            time.sleep(4) 
-            print('procurando input pesquisa')
-            xpathinput = "//input[@class='sc-d565189d-3 kKevNe desktop-input']"
-            pesquisai = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, xpathinput)))
-            pesquisai.click()        
-            
-            print(f'tentando enviar pesquisa: {moeda}')
-            pesquisai.send_keys(moeda)
-            time.sleep(5)
-            break
-        except Exception as e:
-            print(f'1-espaço input não achado Erro: {str(e)}')       
+for moeda, quantidade in informacoes_usuario.items():       
     
     while True:
         try:  
-            time.sleep(6)    
+            busca(moeda)
+            time.sleep(7)
             asset = "//div[@class='sc-f70bb44c-0 sc-230facf7-2 xRfEp' and contains(text(), 'Cryptoassets')]"
             pesquisa3 = WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located((By.XPATH, asset))
@@ -121,7 +122,7 @@ for moeda, quantidade in informacoes_usuario.items():
         print(f'preço de {moeda} é {preco2}')
     except StaleElementReferenceException:
         print('preço não achado')
-
+    
     primeiraQuantidade = quantidade   
     if ',' in preco2:
         valor = preco2.replace('$', '').replace(',', '')
