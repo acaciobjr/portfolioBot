@@ -88,7 +88,7 @@ except:
     print('nao abriu')
 
 tabela = []
-for moeda, quantidade in informacoes_usuario.items():       
+for moeda, quantidade in informacoes_usuario.items(): 
     
     while True:
         try:  
@@ -102,26 +102,41 @@ for moeda, quantidade in informacoes_usuario.items():
             print('o nome achado em cima da busca foi:',visible)
             if visible == 'Cryptoassets':
                 print('validação de categoria, ok')
-                buscaResult = '//div[@class="sc-42dd6c6d-0 VWkPh focused"]'
+                #buscaResult = '//div[@class="sc-42dd6c6d-0 VWkPh focused"]'
+                buscaResult = '//div[@class="sc-d5a83aa9-4 kgda-dh"]'                
                 pesquisa2 = WebDriverWait(driver, 10).until(
                 EC.visibility_of_element_located((By.XPATH, buscaResult))
                 )
                 print('clicando')
                 pesquisa2.click()
                 time.sleep(5)
-                break
+                break            
         except (NoSuchElementException, TimeoutException) as e:
-            print("Elemento não encontrado. Tentando novamente em 2 segundos...")
-            time.sleep(2)    
-    
+            print('resultado não achado. tentando outro xpath')            
+            try:
+                buscaResult2 = '//div[@class="sc-d5a83aa9-0 cNbNlm focused"]'
+                pesquisa3 = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located((By.XPATH, buscaResult2))
+                )
+                pesquisa3.click()
+                print('resultado clicado.')
+                break
+            except (NoSuchElementException, TimeoutException) as e:
+                print("Elemento não encontrado. Tentando novamente em 2 segundos...")
+                time.sleep(2)  
+                
     try:
         print('buscando preço')
         imgPreco = "//*[@id='section-coin-overview']/div[2]/span"
         imgPreco2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, imgPreco)))
         preco2 = imgPreco2.text
+        print(f'preço de {moeda} é {preco2}')        
+    except (StaleElementReferenceException, NoSuchElementException, TimeoutException):
+        print('preço não achado. tentando outro xpath')
+        imgPreco = '//div[@class="sc-f70bb44c-0 jxpCgO base-text"]'
+        imgPreco2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, imgPreco)))
+        preco2 = imgPreco2.text
         print(f'preço de {moeda} é {preco2}')
-    except StaleElementReferenceException:
-        print('preço não achado')
     
     primeiraQuantidade = quantidade   
     if ',' in preco2:
