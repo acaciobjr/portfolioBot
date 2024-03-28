@@ -16,20 +16,21 @@ def busca(nome):
             xpathBusca = "//div[contains(text(), 'Search')]"       
             pesquisa = WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located((By.XPATH, xpathBusca)))
-            pesquisa.click()
+            pesquisa.click()          
             print('abrindo pesquisa')
             time.sleep(4) 
-            print('procurando input pesquisa')
             xpathinput = "//input[@class='sc-d565189d-3 kKevNe desktop-input']"
+            print('procurando input pesquisa')
             pesquisai = WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located((By.XPATH, xpathinput)))
             if pesquisai is not None:
-                pesquisai.click()       
+                pesquisai.click()     
+                pesquisai.clear()  
                 print(f'tentando enviar pesquisa: {nome}')
                 pesquisai.send_keys(nome)
                 break
         except Exception as e:
-            print(f'1-espaço input não achado Erro: {str(e)}')
+            print(f'1-espaço input não achado. Erro: {str(e)}')
     
 file_path = input('digite o caminho completo para o notepad: ')
 
@@ -103,6 +104,7 @@ for moeda, quantidade in informacoes_usuario.items():
             if visible == 'Cryptoassets':
                 print('validação de categoria, ok')
                 #buscaResult = '//div[@class="sc-42dd6c6d-0 VWkPh focused"]'
+                #buscaResult = '//div[@class="sc-d5a83aa9-0 cNbNlm focused"]'
                 buscaResult = '//div[@class="sc-d5a83aa9-4 kgda-dh"]'                
                 pesquisa2 = WebDriverWait(driver, 10).until(
                 EC.visibility_of_element_located((By.XPATH, buscaResult))
@@ -112,18 +114,7 @@ for moeda, quantidade in informacoes_usuario.items():
                 time.sleep(5)
                 break            
         except (NoSuchElementException, TimeoutException) as e:
-            print('resultado não achado. tentando outro xpath')            
-            try:
-                buscaResult2 = '//div[@class="sc-d5a83aa9-0 cNbNlm focused"]'
-                pesquisa3 = WebDriverWait(driver, 10).until(
-                EC.visibility_of_element_located((By.XPATH, buscaResult2))
-                )
-                pesquisa3.click()
-                print('resultado clicado.')
-                break
-            except (NoSuchElementException, TimeoutException) as e:
-                print("Elemento não encontrado. Tentando novamente em 2 segundos...")
-                time.sleep(2)  
+            print("'Cryptoassets' não encontrado. Tentando novamente em 2 segundos...")
                 
     try:
         print('buscando preço')
