@@ -19,9 +19,10 @@ def busca(nome):
             pesquisa.click()          
             print('abrindo pesquisa')
             time.sleep(4) 
-            xpathinput = "//input[@class='sc-d565189d-3 kKevNe desktop-input']"
+            xpathinput = "//input[@class='sc-d565189d-3 ctOzuc desktop-input']"
+            #xpathinput = "//input[@class='sc-d565189d-3 kKevNe desktop-input']"
             print('procurando input pesquisa')
-            pesquisai = WebDriverWait(driver, 10).until(
+            pesquisai = WebDriverWait(driver, 15).until(
             EC.visibility_of_element_located((By.XPATH, xpathinput)))
             if pesquisai is not None:
                 pesquisai.click()     
@@ -70,7 +71,7 @@ except:
 
 try:
     xpathD = "//*[@id='knowledge-currency__updatable-data-column']/div[1]/div[2]/span[1]"
-    imgPreco2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpathD)))
+    imgPreco2 = WebDriverWait(driver, 25).until(EC.presence_of_element_located((By.XPATH, xpathD)))
     preco = imgPreco2.text
     preco2 = preco.replace(',', '.')
     print(preco2)
@@ -89,23 +90,21 @@ except:
     print('nao abriu')
 
 tabela = []
-for moeda, quantidade in informacoes_usuario.items(): 
+for moeda, quantidade in informacoes_usuario.items():       
     
     while True:
         try:  
             busca(moeda)
             time.sleep(7)
-            asset = "//div[@class='sc-f70bb44c-0 sc-230facf7-2 xRfEp' and contains(text(), 'Cryptoassets')]"
-            pesquisa3 = WebDriverWait(driver, 10).until(
+            asset = "//div[@class='sc-d1ede7e3-0 sc-230facf7-2 bwRagp hTMdYT' and contains(text(), 'Cryptoassets')]"
+            pesquisa3 = WebDriverWait(driver, 15).until(
             EC.visibility_of_element_located((By.XPATH, asset))
             )
             visible = pesquisa3.text
             print('o nome achado em cima da busca foi:',visible)
             if visible == 'Cryptoassets':
                 print('validação de categoria, ok')
-                #buscaResult = '//div[@class="sc-42dd6c6d-0 VWkPh focused"]'
-                #buscaResult = '//div[@class="sc-d5a83aa9-0 cNbNlm focused"]'
-                buscaResult = '//div[@class="sc-d5a83aa9-4 kgda-dh"]'                
+                buscaResult = '//div[@class="sc-d5a83aa9-1 jpYipu"]'               
                 pesquisa2 = WebDriverWait(driver, 10).until(
                 EC.visibility_of_element_located((By.XPATH, buscaResult))
                 )
@@ -115,16 +114,17 @@ for moeda, quantidade in informacoes_usuario.items():
                 break            
         except (NoSuchElementException, TimeoutException) as e:
             print("'Cryptoassets' não encontrado. Tentando novamente em 2 segundos...")
-                
+    
     try:
         print('buscando preço')
-        imgPreco = "//*[@id='section-coin-overview']/div[2]/span"
+        imgPreco = '//div[@class="sc-d1ede7e3-0 fsQm base-text"]'
         imgPreco2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, imgPreco)))
         preco2 = imgPreco2.text
         print(f'preço de {moeda} é {preco2}')        
     except (StaleElementReferenceException, NoSuchElementException, TimeoutException):
-        print('preço não achado. tentando outro xpath')
-        imgPreco = '//div[@class="sc-f70bb44c-0 jxpCgO base-text"]'
+        print('preço não achado. tentando outro xpath') 
+        imgPreco = "//*[@id='section-coin-overview']/div[2]/span"
+        #imgPreco = '//div[@class="sc-f70bb44c-0 jxpCgO base-text"]'
         imgPreco2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, imgPreco)))
         preco2 = imgPreco2.text
         print(f'preço de {moeda} é {preco2}')
@@ -175,3 +175,4 @@ while True:
 with open(Arq, 'w') as arquivo:
     arquivo.write(tabela2 + "\n" + f"O valor total da sua carteira é: R${total_em_real_sum}")
     print(f"O arquivo Notepad foi criado com sucesso em: {Arq}")
+driver.quit()
