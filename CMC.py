@@ -128,6 +128,15 @@ for moeda, quantidade in informacoes_usuario.items():
         imgPreco2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, imgPreco)))
         preco2 = imgPreco2.text
         print(f'preço de {moeda} é {preco2}')
+
+    try:
+        posiMcap = '//*[@id="section-coin-stats"]/div/dl/div[1]/div[2]/div/span'
+        xMcap = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, posiMcap)))
+        mCap = xMcap.text
+        print(f'o marketCap está em: ',{mCap},'º')
+    except (StaleElementReferenceException, NoSuchElementException, TimeoutException):
+        print('posição não encontrada.') 
+
     
     primeiraQuantidade = quantidade   
     if ',' in preco2:
@@ -145,10 +154,10 @@ for moeda, quantidade in informacoes_usuario.items():
     total_em_real = montante * taxa_dolar_real
     precoReal = valorDolar * taxa_dolar_real
     
-    linha_atual = [moeda, quantidade, valorDolar, precoReal, total_em_dólar, total_em_real]
+    linha_atual = [moeda, quantidade, valorDolar, precoReal, total_em_dólar, total_em_real, mCap]
     tabela.append(linha_atual)
 
-cabecalho = ["Nome da Moeda", "Quantidade", "Preço em Dólar", "Preço em Real", "total em dolar", "total em real"]    
+cabecalho = ["Nome da Moeda", "Quantidade", "Preço em Dólar", "Preço em Real", "total em dolar", "total em real", "mCap"]    
 tabela2 = tabulate(tabela,headers=cabecalho,tablefmt="grid")
 total_em_real_sum = 0
 total_em_real_sum = sum(linha_atual[5] for linha_atual in tabela)
